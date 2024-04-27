@@ -5,11 +5,8 @@ import com.avijit.fitnessandwellnessbackend.DTO.LoginRequestDto;
 import com.avijit.fitnessandwellnessbackend.DTO.RegisterRequestDto;
 import com.avijit.fitnessandwellnessbackend.Service.UserService;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/user")
-public class UserRegisterController {
+public class UserController {
     private final UserDetailsService userDetailsService;
     private final UserService userService;
     private final JwtTokenUtil jwtTokenUtil;
 
-    public UserRegisterController(UserDetailsService userDetailsService, UserService userService,JwtTokenUtil jwtTokenUtil) {
+    public UserController(UserDetailsService userDetailsService, UserService userService, JwtTokenUtil jwtTokenUtil) {
         this.userDetailsService = userDetailsService;
         this.userService = userService;
         this.jwtTokenUtil = jwtTokenUtil;
