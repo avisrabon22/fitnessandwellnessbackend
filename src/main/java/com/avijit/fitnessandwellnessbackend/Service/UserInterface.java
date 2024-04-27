@@ -1,7 +1,10 @@
 package com.avijit.fitnessandwellnessbackend.Service;
 
-import com.avijit.fitnessandwellnessbackend.DTO.UserRequestDto;
+import com.avijit.fitnessandwellnessbackend.DTO.LoginRequestDto;
+import com.avijit.fitnessandwellnessbackend.DTO.RegisterRequestDto;
+import com.avijit.fitnessandwellnessbackend.Exception.NotFound;
 
 public interface UserInterface {
-    void registerUser(UserRequestDto userRequestDto);
+    void registerUser(RegisterRequestDto registerRequestDto);
+    void loginUser(LoginRequestDto loginRequestDto) throws NotFound;
 }

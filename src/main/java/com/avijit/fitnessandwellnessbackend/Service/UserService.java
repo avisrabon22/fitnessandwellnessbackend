@@ -1,8 +1,11 @@
 package com.avijit.fitnessandwellnessbackend.Service;
 
-import com.avijit.fitnessandwellnessbackend.DTO.UserRequestDto;
+import com.avijit.fitnessandwellnessbackend.DTO.LoginRequestDto;
+import com.avijit.fitnessandwellnessbackend.DTO.RegisterRequestDto;
+import com.avijit.fitnessandwellnessbackend.Exception.NotFound;
 import com.avijit.fitnessandwellnessbackend.Model.UserModel;
 import com.avijit.fitnessandwellnessbackend.Reposetory.UserRepo;
+import jakarta.servlet.http.Cookie;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,17 +18,39 @@ public class UserService implements UserInterface {
         this.userRepo = userRepo;
     }
 
-    public void registerUser(UserRequestDto userRequestDto){
+    // user registration
+    @Override
+    public void registerUser(RegisterRequestDto registerRequestDto) {
         UserModel userModel = new UserModel();
-        userModel.setName(userRequestDto.getName());
-        userModel.setEmail(userRequestDto.getEmail());
+        userModel.setName(registerRequestDto.getName());
+        userModel.setEmail(registerRequestDto.getEmail());
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        userModel.setPassword(bCryptPasswordEncoder.encode(userRequestDto.getPassword()));
-        userModel.setAge(userRequestDto.getAge());
-        userModel.setHeight(userRequestDto.getHeight());
-        userModel.setWeight(userRequestDto.getWeight());
-        userModel.setGender(userRequestDto.getGender());
+        userModel.setPassword(bCryptPasswordEncoder.encode(registerRequestDto.getPassword()));
+        userModel.setAge(registerRequestDto.getAge());
+        userModel.setHeight(registerRequestDto.getHeight());
+        userModel.setWeight(registerRequestDto.getWeight());
+        userModel.setGender(registerRequestDto.getGender());
         userRepo.save(userModel);
     }
+
+    // user login
+    @Override
+    public void loginUser(LoginRequestDto loginRequestDto) throws NotFound {
+        UserModel userModel = userRepo.findByEmail(loginRequestDto.getEmail());
+        if (userModel == null) {
+            throw new NotFound("User Not Found");
+        }
+        if (loginRequestDto.getPassword() == null) {
+            throw new RuntimeException("Invalid Password");
+        }
+
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        if (!bCryptPasswordEncoder.matches(loginRequestDto.getPassword(), userModel.getPassword())) {
+            throw new RuntimeException("Invalid Password");
+        }
+
+    }
+
+
 
 }

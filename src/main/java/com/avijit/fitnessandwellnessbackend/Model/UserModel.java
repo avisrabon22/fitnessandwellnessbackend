@@ -3,6 +3,8 @@ package com.avijit.fitnessandwellnessbackend.Model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,10 +21,15 @@ public class UserModel extends  BaseModel{
     @Column(nullable = false)
     private int age;
     @Column(nullable = false)
-    private int height;
+    private double height;
     @Column(nullable = false)
-    private int weight;
+    private double weight;
     @Column(nullable = false)
     private char gender;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+    @Column(nullable = false)
+    private boolean active;
 
 }
