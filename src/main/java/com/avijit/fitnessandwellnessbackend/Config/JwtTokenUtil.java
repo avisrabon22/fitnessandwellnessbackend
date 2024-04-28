@@ -17,6 +17,7 @@ import java.util.Map;
 public class JwtTokenUtil {
 
 Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
     private final String secret;
 @Autowired
     public JwtTokenUtil(@Value("${jwt.secret}" ) String secret) {
@@ -24,12 +25,15 @@ Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
     public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
+//        System.out.println(key);
+    Map<String, Object> claims = new HashMap<>();
+    claims.put("role", userDetails.getAuthorities());
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // Token expires in 10 hours
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 10)) // Token expires in 10 hours
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
     }

@@ -9,10 +9,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -28,7 +28,7 @@ public class UserController {
     }
 // user registration
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody RegisterRequestDto registerRequestDto){
+    public ResponseEntity<?> registerUser(@RequestBody RegisterRequestDto registerRequestDto){
         if (registerRequestDto == null){
             return ResponseEntity.badRequest().body("Invalid Request");
         }
@@ -48,7 +48,7 @@ public class UserController {
 
 //    user login
     @PostMapping("/login")
-    public  ResponseEntity<String> loginUser(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
+    public  ResponseEntity<?> loginUser(@CookieValue(name = "") @RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
         if (loginRequestDto == null){
             return ResponseEntity.badRequest().body("Invalid Request");
         }
@@ -57,11 +57,14 @@ public class UserController {
         }
         try {
             UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequestDto.getEmail());
-            Cookie cookie = new Cookie("authorize", jwtTokenUtil.generateToken(userDetails));
-            cookie.setPath("/");
+            userService.loginUser(loginRequestDto);
+            String jwtToken = jwtTokenUtil.generateToken(userDetails);
+            String encodedJwtToken = URLEncoder.encode("Bearer "+jwtToken, StandardCharsets.UTF_8);
+            Cookie cookie = new Cookie("authorization", encodedJwtToken);
             cookie.setHttpOnly(true);
             cookie.setMaxAge(60 * 60 * 10);
             cookie.setSecure(true);
+            cookie.setPath("/");
             response.addCookie(cookie);
             return ResponseEntity.ok("Login Successfully");
         } catch (Exception e) {
@@ -70,8 +73,6 @@ public class UserController {
 
 
     }
-
-
 
 
 

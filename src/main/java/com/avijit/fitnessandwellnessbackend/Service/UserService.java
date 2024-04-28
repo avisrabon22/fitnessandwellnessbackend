@@ -4,6 +4,7 @@ import com.avijit.fitnessandwellnessbackend.DTO.LoginRequestDto;
 import com.avijit.fitnessandwellnessbackend.DTO.RegisterRequestDto;
 import com.avijit.fitnessandwellnessbackend.Exception.NotFound;
 import com.avijit.fitnessandwellnessbackend.Model.UserModel;
+import com.avijit.fitnessandwellnessbackend.Model.UserRole;
 import com.avijit.fitnessandwellnessbackend.Reposetory.UserRepo;
 import jakarta.servlet.http.Cookie;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,6 +22,11 @@ public class UserService implements UserInterface {
     // user registration
     @Override
     public void registerUser(RegisterRequestDto registerRequestDto) {
+        UserModel userFind=userRepo.findByEmail(registerRequestDto.getEmail());
+        if (userFind!=null){
+            throw new RuntimeException("User Already Exist");
+        }
+
         UserModel userModel = new UserModel();
         userModel.setName(registerRequestDto.getName());
         userModel.setEmail(registerRequestDto.getEmail());
@@ -30,6 +36,7 @@ public class UserService implements UserInterface {
         userModel.setHeight(registerRequestDto.getHeight());
         userModel.setWeight(registerRequestDto.getWeight());
         userModel.setGender(registerRequestDto.getGender());
+        userModel.setRole(UserRole.USER);
         userRepo.save(userModel);
     }
 
