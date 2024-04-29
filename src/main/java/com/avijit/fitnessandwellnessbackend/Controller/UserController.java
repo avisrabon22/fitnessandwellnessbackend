@@ -5,6 +5,7 @@ import com.avijit.fitnessandwellnessbackend.DTO.LoginRequestDto;
 import com.avijit.fitnessandwellnessbackend.DTO.RegisterRequestDto;
 import com.avijit.fitnessandwellnessbackend.Service.UserService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -74,6 +75,12 @@ public class UserController {
 
     }
 
+//    Profile
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile(HttpServletRequest request){
+
+        return ResponseEntity.ok("Profile");
+    }
 
 
 }

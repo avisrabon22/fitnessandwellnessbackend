@@ -7,4 +7,5 @@ import com.avijit.fitnessandwellnessbackend.Exception.NotFound;
 public interface UserInterface {
     void registerUser(RegisterRequestDto registerRequestDto);
     void loginUser(LoginRequestDto loginRequestDto) throws NotFound;
+    void logoutUser();
 }

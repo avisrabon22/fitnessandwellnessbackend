@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService implements UserInterface {
-
     private final UserRepo userRepo;
 
     public UserService(UserRepo userRepo) {
@@ -26,6 +25,7 @@ public class UserService implements UserInterface {
         if (userFind!=null){
             throw new RuntimeException("User Already Exist");
         }
+
 
         UserModel userModel = new UserModel();
         userModel.setName(registerRequestDto.getName());
@@ -58,6 +58,10 @@ public class UserService implements UserInterface {
 
     }
 
+    @Override
+    public void logoutUser() {
+
+    }
 
 
 }

@@ -28,7 +28,6 @@ Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 //        System.out.println(key);
     Map<String, Object> claims = new HashMap<>();
     claims.put("role", userDetails.getAuthorities());
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
@@ -51,7 +50,7 @@ Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getExpiration();
     }
 
-    private String extractUsername(String token) {
+    public String extractUsername(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 
