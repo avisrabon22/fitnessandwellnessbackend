@@ -49,7 +49,7 @@ public class UserController {
 
 //    user login
     @PostMapping("/login")
-    public  ResponseEntity<?> loginUser(@CookieValue(name = "") @RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
+    public  ResponseEntity<?> loginUser(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
         if (loginRequestDto == null){
             return ResponseEntity.badRequest().body("Invalid Request");
         }
@@ -67,7 +67,7 @@ public class UserController {
             cookie.setSecure(true);
             cookie.setPath("/");
             response.addCookie(cookie);
-            return ResponseEntity.ok("Login Successfully");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Invalid Request");
         }
@@ -77,13 +77,9 @@ public class UserController {
 
 // Get Profile
     @GetMapping("/profile")
-    public ResponseEntity<?> getProfile(HttpServletRequest request) throws NotFound {
-        String jwtToken = request.getHeader("authorization");
-        String token = jwtToken.substring(7);
-        String username = jwtTokenUtil.extractUsername(token);
-        if (username == null){
-            return ResponseEntity.badRequest().body("Invalid Request");
-        }
+    public ResponseEntity<?> getProfile(@CookieValue(name = "authorization",defaultValue ="" ) String token) throws NotFound {
+        String mainToken = token.substring(7);
+        String username = jwtTokenUtil.extractUsername(mainToken);
         ProfileRequestDto profileRequestDto = new ProfileRequestDto();
         profileRequestDto.setEmail(username);
         ProfileResponseDto profileResponseDto = userService.getProfile(profileRequestDto);
